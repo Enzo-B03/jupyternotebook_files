@@ -1,25 +1,33 @@
+#This text file contains the codes and techniques that I found interesting and helpful.
+#
+#
 I'll be keeping all my notes here about python and maybe for all other programming languages that I'll encounter.
-
+#--------------------------------------------------------------------------------------------------------------------using conditionals to slice df-------------------------------------------------------------------------
 
 
 ###### The syntax for selecting part of the dataframe that satisfies your condition is:
     df[df[colname] > some_number]
+#--------------------------------------------------------------------------------------------------------------------using interpolate--------------------------------------------------------------------------------------
 
 df.interpolate is awesome!
 here's an example implementation:
     df.interpolate(method='linear', limit_direction='forward', axis=0)
-    
-    
-r'C:\\ ..... --> the r here means 'raw'. you can use raw('type address here'). the purpose is so that the text captures all the file path you put in including the \\
 
-use of np.where
+#--------------------------------------------------------------------------------------------------------------------using r' in file address-------------------------------------------------------------------------------
+
+r' in this context means the regex raw.    
+r'C:\\ ..... --> the r here means 'raw'. you can use raw('type address here'). 
+# the purpose is so that the text captures all the file path you put in including the \\
+
+#--------------------------------------------------------------------------------------------------------------------use of np.where----------------------------------------------------------------------------------------
+
 
 df_comb['105FT002AB_PV'] = np.where(df_comb['105TK01_H2S_FR_A']>df_comb['105TK01_H2S_FR_B'],\
                                     df_comb['105TK01_H2S_FR_A'], df_comb['105TK01_H2S_FR_B']) 
                                     
                                     
-#----7/23/2020
-Using scikitlearn linear reg for single feature
+#----7/23/2020------------------------------------------------------------------------------------------------------Using scikitlearn linear reg for single feature---------------------------------------------------------
+
 
 X = dataset['MinTemp'].values.reshape(-1,1)
 y = dataset['MaxTemp'].values.reshape(-1,1)
@@ -43,20 +51,20 @@ plt.scatter(X_test, y_test,  color='gray')
 plt.plot(X_test, y_pred, color='red', linewidth=2)
 plt.show()
 
-#----Appending df's
+#---------------------------------------------------------------------------------------------------------------------Appending df's----------------------------------------------------------------------------------------
 sample
 df3 = jun.append([jul, may], ignore_index=False)
 #----Sorting index
 dataframe. sort_index()
 
 
-#---------dropping rows using .loc
+#---------------------------------------------------------------------------------------------------------------------dropping rows using .loc-----------------------------------------------------------------------------
 df.drop(df.loc[df.time< df.time.shift()].index, inplace=True)
 example:
 df.drop(df.loc['2020-03-20 06:00:00':'2020-04-15 06:00:00'].index)
 
 
-#------------plotly markers and lines----------------------
+#---------------------------------------------------------------------------------------------------------------------plotly markers and lines-----------------------------------------------------------------------------
 choosing to plot using lines or dots can be done with mode. See example.
 # Add traces
 fig.add_trace(go.Scatter(x=random_x, y=random_y0,
@@ -69,11 +77,11 @@ fig.add_trace(go.Scatter(x=random_x, y=random_y2,
                     mode='lines',
                     name='lines'))
 
-#------------dropping duplicates in a row ----
+#---------------------------------------------------------------------------------------------------------------------dropping duplicates in a row -------------------------------------------------------------------------
 df = df.drop_duplicates(subset='favorite_color', keep="first")
 
 
-#------------plotting in plotly express
+#---------------------------------------------------------------------------------------------------------------------plotting in plotly express---------------------------------------------------------------------------- 
 #
 # this is a sample of generating the trace
 figNTRL.add_trace(go.Scatter(x=NTRL['104_FT'].index, 
@@ -88,9 +96,9 @@ Example:
 
 fig_acid.update_layout(title_text=title_plotAcid,xaxis=dict(rangeslider=dict(visible = True),type='date'))
 
-#-----------                             
+#---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------     
 
-#---------------plotly pie plots------------------------------
+#----------------------------------------------------------------------------------------------------------------------plotly pie plots------------------------------------------------------------------------------------
 # sample of pie plot
 #labels_flocc = ['ORE','CCD_MS']
 #figfloc.add_trace(go.Pie(labels=labels_flocc,
@@ -99,12 +107,12 @@ fig_acid.update_layout(title_text=title_plotAcid,xaxis=dict(rangeslider=dict(vis
 #                         insidetextorientation='radial', opacity=0.5
 #                            ))
 
-#-------------------------------------Changing jupyternotebook to dark mode--------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------------------------Changing jupyternotebook to dark mode--------------------------------------------------------------
 jt -t monokai -f fira -fs 13 -nf ptsans -nfs 11 -N -kl -cursw 5 -cursc r -cellw 95% -T
 
 
 
-#---------------------------------Plotly subplots----------------------------------------------------------------------------------------------------
+#-----------------------------------------------------------------------------------------------------------------------Plotly subplots------------------------------------------------------------------------------------
 #
 from plotly.subplots import make_subplots
 import plotly.graph_objects as go
@@ -129,9 +137,9 @@ fig.update_layout(height=600, width=600, title_text="specs examples")
 fig.show()
 
 #
-#------------------------------------------------------------------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #
-#-------------------------------------Plotly accepted line color names---------------------------------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------------------Plotly accepted line color names------------------------------------------------------------------
 #
 #   The 'color' property is a color and may be specified as:
       - A hex string (e.g. '#ff0000')
@@ -175,7 +183,7 @@ fig.show()
             turquoise, violet, wheat, white, whitesmoke,
             yellow, yellowgreen
 
-#------------------------------------Plotly chart improvement tip: adding vertical spikelines------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------------------------------------------------Plotly chart improvement tip: adding vertical spikelines---------------------------------------
 #
 # Build graph
 layout = go.Layout(
@@ -200,10 +208,208 @@ layout = go.Layout(
     )
 )
 #
-#-----------------------------------Plotly rotating the xaxis labels to 90 degrees------------------------------------------------------------------------------
+#-----------------------------------------------------------------------------------------------------------------------------Plotly rotating the xaxis labels to 90 degrees------------------------------------------------
 # Sample code for rotating the x-axis of a plot
 plt.plot(df_pu01_flow_and_date.index, df_pu01_flow_and_date['105PU01A_FLOW'])
 plt.xticks(rotation=90)
 plt.show()
 #
 #
+
+#------------------------------------------------------------------------------------------------------------------------------List comprehension in pandas that worked-----------------------------------------------------
+
+#create a column to check if the datetime column was continuous. This will help suggest that the HV700 changed position
+df_series_new_DT['skipped_hours'] = [str(x).split(" ")[-1] for x in df_series_new_DT['dt_diff']]
+
+#------------------------------------------End----------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+#------------------------------------------------------------------------------------------------------------------------------Lambda Functions-----------------------------------------------------------------------------
+df['age']=df.apply(lambda x: x['age']+3,axis=1)
+
+
+
+
+#------------------------------------------------------------------------------------------------------------------------------Reordering the index by explicitly listing it using loc------------
+
+df_scrubber_caustic_cons_MS_Flow = df_scrubber_caustic_cons_MS_Flow.loc[['501-600', '601-700', '701-800', '801-900',
+                                                                         '901-1000', '1001-1100', '1101-1200', '1201-1300',
+                                                                         '1301-1400', '1401-1500','1501-1600', '1601-1700'], :]
+
+
+#-------------------------------------------------------------------------------------------------------------------------------End---------------------------------------------------------------
+
+
+#------------------------------------------------------------------------------------------------------------------------------plotting histograms in plotly--------------------------------------
+
+import plotly.express as px
+import numpy as np
+
+fig_series_single_hist = go.Figure()
+fig_series_single_hist.add_trace(go.Histogram(x=df_series_withou_Ni['MS_Flow'],  xbins=dict(start=500,end=1650,size=100), name='scrubber in series', marker_color='#EB89B5',
+    opacity=0.75))
+fig_series_single_hist.add_trace(go.Histogram(x=df_single_without_Ni['MS_Flow'],  xbins=dict(start=500,end=1650,size=100), name='scrubber in single', marker_color='#330C73',
+    opacity=0.75))
+fig_series_single_hist.update_layout(
+    title_text='Comparing Datasets of MS Flowrates for Single and Series Scrubber Operation', # title of plot
+    xaxis_title_text='MS Flow', # xaxis label
+    yaxis_title_text='Number of Datapoints for every MS Flow Range', # yaxis label
+    bargap=0.2, # gap between bars of adjacent location coordinates
+    bargroupgap=0.1 # gap between bars of the same location coordinates
+)
+
+fig_series_single_hist.show()
+
+#-------------------------------------------------------------------------------------------------------------------------------End---------------------------------------------------------------
+#
+#------------------------------------------------------------------------------------------------------------------------------plotting histogram using pandas------------------------------------
+
+#sample
+ax_single = df_single_without_Ni.hist(column='MS_Flow', bins=25, grid=False, figsize=(12,8), color='#86bf91', zorder=2, rwidth=0.9)                              
+
+#-------------------------------------------------------------------------------------------------------------------------------End--------------------------------------------------------------
+
+#----------------------------------------------------------------------------------------------------------------Using pyinstaller to generate an exe file---------------------------------------
+pyinstaller --noconsole --onedir --i=rec.ico --clean script.py
+
+pyinstaller --onefile hello.py
+
+
+#----------------------------------------------------------------------------------------------------------------Using conditionals to slice DF in Pandas----------------------------------------
+#
+#
+Example:
+Fe_104_less07 = DF_intrpltd_subgrp[(DF_intrpltd_subgrp['104_Fe']>0.7) & (DF_intrpltd_subgrp['104_Fe']<0.9)] # note the use of the single ampersand character
+
+
+#----------------------------------------------------------------------------------------------------------------seaborn KDE Plots, Shading a range of values under the Curve----------------------------------------------
+#
+# Example
+
+FeZn_104_withRedissoltn = DF_NTRL_TK0513_MSTK01_intrpltd[DF_NTRL_TK0513_MSTK01_intrpltd['Zn_drop_act']<=0]['104_FeZn_ratio']
+FeZn_104_withOutRedissoltn = DF_NTRL_TK0513_MSTK01_intrpltd[DF_NTRL_TK0513_MSTK01_intrpltd['Zn_drop_act']>0]['104_FeZn_ratio']
+
+ax = sns.kdeplot(FeZn_104_withRedissoltn, clip=(0,50), shade=False)
+
+line = ax.get_lines()[-1]
+x, y = line.get_data()
+mask = x < 10
+x, y = x[mask], y[mask]
+ax.fill_between(x, y1=y, alpha=0.5, facecolor='lightblue')
+
+ax = sns.kdeplot(FeZn_104_withOutRedissoltn, clip=(0,50), shade=False)
+line = ax.get_lines()[-1]
+x, y = line.get_data()
+mask = x < 10
+x, y = x[mask], y[mask]
+ax.fill_between(x, y1=y, alpha=0.5, facecolor='orange')
+
+#
+plt.legend(labels=['FeZn_104_withRedissoltn','FeZn_104_withOutRedissoltn'])
+plt.xlabel('Fe/Zn at NTRL')
+plt.title('FeZn_104_Distribution_with_and_\nwithOut_Redissolution 2017 to 2020')
+plt.savefig(r'C:\Users\v.t.flores\Documents\FeZn_104_Distribution_with_and_withOut_Redissolution_shaded.png')
+plt.show()
+
+
+#------------------------------------------------------------------------------------------------------------------Plotly How to Highlight timeseries ranges-------------------------
+#
+# First, create the figure and the layout then add the following code:
+# Example.
+figzndrop_PRED.add_shape(
+        # filled Rectangle
+            type="rect",
+            x0='2020-08-26 03:00:00',
+            y0=-500,
+            x1='2020-08-26 06:00:00',
+            y1=200,
+            fillcolor="LightSalmon",
+            opacity=0.5,
+            layer="below",
+            line_width=0,
+        )
+
+figzndrop_PRED.update_shapes(dict(xref='x', yref='y'))
+
+#-------------------------------------------------------------------------------------------------------------------Notes on using tf.keras--------------------------------------------------------
+
+Don't forget to cross-check the model name that you built with the model that you're training
+
+
+#------------------------------------------------------------------------------------------------------------------The smallest postive float number-----------------------------------------------
+np.nextafter(0,1)
+
+(1.0/(10**-300)) <---------the smallest positive number that will not give you an infinity value if you divide a number with it
+
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+#------------------------------------------------------------------------------------------------------------------Tensor flow building a model function-------------------------------------------
+#
+# L2 regularization and dropout is included in this function
+
+def build_model():
+    model = keras.Sequential([
+    layers.Dense(512, activation=tf.nn.relu, 
+                 kernel_regularizer=regularizers.l2(0.0001), 
+                 input_shape=[len(train_dataset.keys())]),
+    layers.Dropout(0.5),
+    layers.Dense(512, activation=tf.nn.relu,
+                kernel_regularizer=regularizers.l2(0.0001)),
+    layers.Dropout(0.5),
+    layers.Dense(1)
+  ])
+
+    optimizer = tf.keras.optimizers.RMSprop(0.001)
+
+    model.compile(loss='mse',
+                optimizer=optimizer,
+                metrics=['mae', 'mse'])
+    return model
+#--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------    
+
+#-----------------------------------------------------------------------------------------------------------------Plotting 3D ScatterPlots Multiple Plots in a page--------------------------------    
+
+# note how to create the subplots
+# note howt to change the x, y and z labels for each 3D scatterplots. It uses the scene1 for the first 3D plot and scene2 for the second 3D scatterplot
+
+# Create the 3D scatter Plot for Zn Ni Prediction for varying H2S_tk01 and H2S_tk02
+
+subplotTitle = ['Using PLS on SEPT1 11AM', 'Using Todays PLS']
+figznNI_PRED_TF = make_subplots(
+    rows=1, cols=2,
+    specs=[[{"type": "Scatter3d"}, {"type": "Scatter3d"}]],
+    subplot_titles=(subplotTitle))
+
+x = df_H2S_tk01_02_znni_test['H2S_tk01']
+y = df_H2S_tk01_02_znni_test['H2S_tk02']
+z = df_H2S_tk01_02_znni_test['ZnNi_pred']
+
+x_a = df_H2S_tk01_02_znni['H2S_tk01']
+y_a = df_H2S_tk01_02_znni['H2S_tk02']
+z_a = df_H2S_tk01_02_znni['ZnNi_pred']
+
+figznNI_PRED_TF.add_trace(go.Scatter3d(x = x, y = y, z = z,
+                                      mode='markers', name='Zn Ni Ratio Past PLS',
+                                       marker=dict(size=2, color=z,                # set color to an array/list of desired values
+                                                   colorscale='Viridis',   # choose a colorscale
+                                                   opacity=0.6),
+                                      ), row=1, col=1)
+figznNI_PRED_TF.add_trace(go.Scatter3d(x = x_a, y = y_a, z = z_a, name='Zn Ni Ratio Present PLS',
+                                       mode='markers',
+                                       marker=dict(size=2, color=z_a,                # set color to an array/list of desired values
+                                                   colorscale='Viridis',   # choose a colorscale
+                                                   opacity=0.6),
+                                      ), row=1, col=2)
+
+figznNI_PRED_TF.update_layout(title_text="Simulation: Predicted ZnNi Ratio at varying H2S_tk01 and H2S_tk02 using the present PLS compared with SEPT1 11AM PLS"+'<br>'+\
+                             "[Unreliable results]")
+figznNI_PRED_TF.update_layout(scene1 = dict(
+                    xaxis_title='H2S_tk01_m3/h',
+                    yaxis_title='H2S_tk02_m3/h',
+                    zaxis_title='ZnNi_Ratio_Pred'))
+figznNI_PRED_TF.update_layout(scene2 = dict(
+                    xaxis_title='H2S_tk01_m3/h',
+                    yaxis_title='H2S_tk02_m3/h',
+                    zaxis_title='ZnNi_Ratio_Pred'))
+                    
+#-----------------------------------------------------------------------------------------------------------------end-------------------------------------------------------------------------------------   

@@ -108,9 +108,12 @@ fig_acid.update_layout(title_text=title_plotAcid,xaxis=dict(rangeslider=dict(vis
 #                            ))
 
 #----------------------------------------------------------------------------------------------------------------------Changing jupyternotebook to dark mode--------------------------------------------------------------
+first, open anaconda prompt
+next, type the commands below
+
 jt -t monokai -f fira -fs 13 -nf ptsans -nfs 11 -N -kl -cursw 5 -cursc r -cellw 95% -T
 
-
+jt -r <----- to reset back to the default jupyter notebook theme
 
 #-----------------------------------------------------------------------------------------------------------------------Plotly subplots------------------------------------------------------------------------------------
 #
@@ -220,6 +223,9 @@ plt.show()
 
 #create a column to check if the datetime column was continuous. This will help suggest that the HV700 changed position
 df_series_new_DT['skipped_hours'] = [str(x).split(" ")[-1] for x in df_series_new_DT['dt_diff']]
+
+
+shutdown_sched_3['Duration_hrs_plan'] = [timedelta(hours=x) if x < 0 else 10 for x in shutdown_sched_3['Duration_hrs_plan']] # column 5
 
 #------------------------------------------End----------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -412,4 +418,76 @@ figznNI_PRED_TF.update_layout(scene2 = dict(
                     yaxis_title='H2S_tk02_m3/h',
                     zaxis_title='ZnNi_Ratio_Pred'))
                     
-#-----------------------------------------------------------------------------------------------------------------end-------------------------------------------------------------------------------------   
+#-----------------------------------------------------------------------------------------------------------------end--------------------------
+
+#-----------------------------------------------------------------------------------------------------------timedelta--------------------------
+computing the number of hours from a timedelta variable
+
+t_dif = col_index.index[1] - col_index.index[0]
+t_dif.seconds/3600
+
+#-----------------------------------------------------------------------------------------------------------------end---------------------------------------------------------
+
+#-------------------------------------------------------------------------------------------Adding Tables to Plotly Plots-----------------------------------------------------
+add table data
+table1 = [
+    ['Parameter', 'Value'],
+    ['time_range_minutes', 30],
+    ['trailing_stop_point', 100],
+]
+
+# Initialize a figure with ff.create_table(table_data)
+table = ff.create_table(table1)
+
+# Add graph data
+trace1 = go.Scatter(
+    x=trade_number,
+    y=list_profit,
+    name='profit'
+)
+trace2 = go.Scatter(
+    x=trade_number,
+    y=list_mdd,
+    name='MDD'
+)
+trace3 = go.Histogram(
+    x=list_profit,
+    name='profit'
+)
+
+# Subplots
+fig = tools.make_subplots(
+    rows=2,
+    cols=2,
+    print_grid=True
+)
+
+fig.append_trace(trace1, 1, 1)
+fig.append_trace(trace2, 2, 1)
+fig.append_trace(trace3, 1, 2)
+fig.append_trace(table['data'][0], 2, 2)
+
+#----------------------------------------------------------------------------------------end--------------------------------------------------------------------------------
+
+#----------------------------------------------------------------------------------------appending charts in plotly html-------------------------------------------------------------
+with open(r'C:\samplefilepath\fig.html', 'a') as f:  <---------------------note the 'a'. this is responsible for appending the chart to an existing html
+    f.write(fig_sim_zn_PRED_TF.to_html(fig_sim_zn_PRED_TF, full_html=False, include_plotlyjs='cdn'))
+
+
+#----------------------------------------------------------------------------------------using REGEX to find specific word-----------------------------------------------------------------------------------------------
+
+text = 'Hand-over to Mechanical (Inspection/Repair)'
+match = re.search(r'\binspection\b',text.lower())
+if match:
+    print('found')
+    
+
+#---------------------------------------------------------------------------------------------------------------------------Changing the datetime frequency to daily in Pandas----------------------------------------------
+
+print(PI_115_B.resample('d').max()[['WFW_FLOW_TK01', 'CAUSTIC_FLOW_TK01', 'TK01_LVL', 'WFW_PRESSURE', 'TOTALIZER_CAUSTIC']])    
+
+
+#---------------------------------------------------------------------------------------------------------------------------Finding NAN values in desired column and then dropping them in Pandas---------------------------
+
+index_list = shutdown_sched_2[pd.isna(shutdown_sched_2['START_plan'])].index                                   #takes the index of the column 'START_plan' with Nan values and stores it in the variable index_list
+

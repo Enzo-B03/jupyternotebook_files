@@ -491,3 +491,25 @@ print(PI_115_B.resample('d').max()[['WFW_FLOW_TK01', 'CAUSTIC_FLOW_TK01', 'TK01_
 
 index_list = shutdown_sched_2[pd.isna(shutdown_sched_2['START_plan'])].index                                   #takes the index of the column 'START_plan' with Nan values and stores it in the variable index_list
 
+#--------------------------------------------------------------------------------------------------------------------------Function that rounds the datetime to the nearest hour------------------------------------------
+def hour_rounder(t):
+    # Rounds to nearest hour by adding a timedelta hour if minute >= 30
+    return (t.replace(second=0, microsecond=0, minute=0, hour=t.hour)
+               +timedelta(hours=t.minute//30))
+
+
+
+#--------------------------------------------------------------------------------------------------------------------------UPDATING A SPECIFIC CELL IN PANDAS DF USING DF.at-------------------------------------------
+
+df.at['row1','colname1'] = 10
+
+#--------------------------------------------------------------------------------------------------------------------------PANDAS: REPLACING SPECIFIC ZEROS IN COLUMN WITH THE ZERO VALUES BEFORE IT-----------------------
+
+df['A'].replace(to_replace=0, method='ffill')
+
+#-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+#--------------------------------------------------------------------------------------------------------------------------PANDAS RESAMPLE--------------------------------------------------------
+
+df_subset_pi.resample('W').mean()
